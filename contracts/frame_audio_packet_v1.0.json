@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["frame_idx", "timestamp_ms", "audio", "vlm_payload", "event_trigger", "meta_exec"],
+  "properties": {
+    "version": {"type": "string"},
+    "clip_id": {"type": "string"},
+    "frame_id": {"type": "integer"},
+    "frame_idx": {"type": "integer"},
+    "ts_ms": {"type": "number"},
+    "timestamp_ms": {"type": "number"},
+    "video_path": {"type": "string"},
+    "wav_path": {"type": "string"},
+    "img": {"type": "object"},
+    "audio_win": {"type": "object"},
+    "doa": {"type": "object"},
+    "percept": {"type": "object"},
+    "geom": {"type": "object"},
+    "plan": {"type": "object"},
+    "weather": {"type": "object"},
+    "vlm": {"type": "object"},
+    "avla": {"type": "object"},
+    "audio": {"type": "object"},
+    "vlm_payload": {"type": "object"},
+    "event_trigger": {"type": "object"},
+    "meta_exec": {"type": "object"},
+    "_hist": {"type": "object"},
+    "_sync": {"type": "object"}
+  },
+  "additionalProperties": true
+}
