@@ -13,7 +13,16 @@
     "wav_path": {"type": "string"},
     "img": {"type": "object"},
     "audio_win": {"type": "object"},
-    "doa": {"type": "object"},
+    "doa": {
+      "type": "object",
+      "required": ["dir_deg", "gt_dir_deg", "confidence", "direction"],
+      "properties": {
+        "dir_deg": {"type": "number"},
+        "gt_dir_deg": {"type": "number", "description": "-1 when ground truth is unknown"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "direction": {"type": "string", "enum": ["left", "center", "right"]}
+      }
+    },
     "percept": {"type": "object"},
     "geom": {"type": "object"},
     "plan": {"type": "object"},

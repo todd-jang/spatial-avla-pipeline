@@ -1,0 +1,271 @@
+{
+  "schema": "demo-sequence/v1",
+  "built_from": "/Users/robotjang/spatial-avla-pipeline/outputs/p_siren_report.json",
+  "engine": "P_sirenProvider.frame_value + agent_s_b.s_b_fn FSM (production code path, 1:1)",
+  "engine_params": {
+    "siren_raw_threshold": 0.8,
+    "min_hold_frames": 35
+  },
+  "classifiers": {
+    "showcase_min_active_rate": 0.7,
+    "secondary_min_active_rate": 0.3
+  },
+  "segments": [
+    {
+      "order": 1,
+      "clip_id": "C02",
+      "label": "C02 - Seoul tunnel, wet (video available)",
+      "group": "negative_control_clips",
+      "role": "quiet_control",
+      "expected": "quiet",
+      "has_video": true,
+      "demo_n_frames": 451,
+      "n_model_frames": 749,
+      "active_frames": 0,
+      "active_rate": 0.0,
+      "first_raw_trigger_frame": -1,
+      "mean_p": 0.0003,
+      "flicker": false,
+      "assert": {
+        "must_be_quiet": true,
+        "must_fire_within_window": false,
+        "notes": [
+          "zero active frames in the demo window"
+        ]
+      }
+    },
+    {
+      "order": 2,
+      "clip_id": "C04",
+      "label": "C04 - Seoul bridge (video available)",
+      "group": "negative_control_clips",
+      "role": "quiet_control",
+      "expected": "quiet",
+      "has_video": true,
+      "demo_n_frames": 451,
+      "n_model_frames": 749,
+      "active_frames": 0,
+      "active_rate": 0.0,
+      "first_raw_trigger_frame": -1,
+      "mean_p": 0.0017,
+      "flicker": false,
+      "assert": {
+        "must_be_quiet": true,
+        "must_fire_within_window": false,
+        "notes": [
+          "zero active frames in the demo window"
+        ]
+      }
+    },
+    {
+      "order": 3,
+      "clip_id": "G44-04-Ambulance Siren",
+      "label": "G44-04 ambulance siren (audio only)",
+      "group": "real_sirens",
+      "role": "siren_showcase",
+      "expected": "trigger",
+      "has_video": false,
+      "demo_n_frames": 900,
+      "n_model_frames": 900,
+      "active_frames": 900,
+      "active_rate": 1.0,
+      "first_raw_trigger_frame": 0,
+      "mean_p": 0.9513,
+      "flicker": false,
+      "assert": {
+        "must_be_quiet": false,
+        "must_fire_within_window": true,
+        "notes": [
+          "first raw trigger must occur within demo_n_frames"
+        ]
+      }
+    },
+    {
+      "order": 4,
+      "clip_id": "G44-05-Warbling Boat Siren",
+      "label": "G44-05 warbling boat siren (audio only)",
+      "group": "real_sirens",
+      "role": "siren_showcase",
+      "expected": "trigger",
+      "has_video": false,
+      "demo_n_frames": 727,
+      "n_model_frames": 727,
+      "active_frames": 727,
+      "active_rate": 1.0,
+      "first_raw_trigger_frame": 0,
+      "mean_p": 0.9778,
+      "flicker": false,
+      "assert": {
+        "must_be_quiet": false,
+        "must_fire_within_window": true,
+        "notes": [
+          "first raw trigger must occur within demo_n_frames"
+        ]
+      }
+    },
+    {
+      "order": 5,
+      "clip_id": "G44-07-Emergency Siren",
+      "label": "G44-07 emergency siren (audio only)",
+      "group": "real_sirens",
+      "role": "siren_showcase",
+      "expected": "trigger",
+      "has_video": false,
+      "demo_n_frames": 822,
+      "n_model_frames": 822,
+      "active_frames": 820,
+      "active_rate": 0.9976,
+      "first_raw_trigger_frame": 2,
+      "mean_p": 0.858,
+      "flicker": false,
+      "assert": {
+        "must_be_quiet": false,
+        "must_fire_within_window": true,
+        "notes": [
+          "first raw trigger must occur within demo_n_frames"
+        ]
+      }
+    },
+    {
+      "order": 6,
+      "clip_id": "G44-03-Whoopee Whistle Siren",
+      "label": "G44-03 whoopee whistle (audio only)",
+      "group": "real_sirens",
+      "role": "siren_showcase",
+      "expected": "trigger",
+      "has_video": false,
+      "demo_n_frames": 3183,
+      "n_model_frames": 3183,
+      "active_frames": 2858,
+      "active_rate": 0.8979,
+      "first_raw_trigger_frame": 2,
+      "mean_p": 0.7627,
+      "flicker": false,
+      "assert": {
+        "must_be_quiet": false,
+        "must_fire_within_window": true,
+        "notes": [
+          "first raw trigger must occur within demo_n_frames"
+        ]
+      }
+    },
+    {
+      "order": 7,
+      "clip_id": "G44-02-Air Raid Siren",
+      "label": "G44-02 air raid siren (audio only)",
+      "group": "real_sirens",
+      "role": "siren_showcase",
+      "expected": "trigger",
+      "has_video": false,
+      "demo_n_frames": 1386,
+      "n_model_frames": 1386,
+      "active_frames": 1194,
+      "active_rate": 0.8615,
+      "first_raw_trigger_frame": 0,
+      "mean_p": 0.6634,
+      "flicker": false,
+      "assert": {
+        "must_be_quiet": false,
+        "must_fire_within_window": true,
+        "notes": [
+          "first raw trigger must occur within demo_n_frames"
+        ]
+      }
+    },
+    {
+      "order": 8,
+      "clip_id": "G44-01-Sirens",
+      "label": "G44-01 real siren (audio only)",
+      "group": "real_sirens",
+      "role": "siren_secondary",
+      "expected": "trigger",
+      "has_video": false,
+      "demo_n_frames": 1661,
+      "n_model_frames": 1661,
+      "active_frames": 1036,
+      "active_rate": 0.6237,
+      "first_raw_trigger_frame": 5,
+      "mean_p": 0.5904,
+      "flicker": true,
+      "assert": {
+        "must_be_quiet": false,
+        "must_fire_within_window": true,
+        "notes": [
+          "first raw trigger must occur within demo_n_frames"
+        ]
+      }
+    }
+  ],
+  "excluded": [
+    {
+      "clip_id": "C01",
+      "label": "C01 - Seoul tunnel, dry (video available)",
+      "group": "negative_control_clips",
+      "role": "known_fp",
+      "expected": "quiet",
+      "reason": "fires 83/450 frames (18.4%) on clean audio; would false-alarm in demo",
+      "demo_n_frames": 450,
+      "n_model_frames": 749,
+      "active_frames": 83,
+      "active_rate": 0.1844,
+      "first_raw_trigger_frame": 16,
+      "mean_p": 0.0748
+    },
+    {
+      "clip_id": "C01_siren",
+      "label": "C01 + siren at 12dB (no video)",
+      "group": "noisy_positive_clips",
+      "role": "known_miss",
+      "expected": "trigger",
+      "reason": "contains a real siren at 12dB SNR but only fires 0.0% of frames; known head limitation",
+      "demo_n_frames": 749,
+      "n_model_frames": 749,
+      "active_frames": 0,
+      "active_rate": 0.0,
+      "first_raw_trigger_frame": -1,
+      "mean_p": 0.0001
+    },
+    {
+      "clip_id": "C02_siren",
+      "label": "C02 + siren at 12dB (no video)",
+      "group": "noisy_positive_clips",
+      "role": "known_miss",
+      "expected": "trigger",
+      "reason": "contains a real siren at 12dB SNR but only fires 0.0% of frames; known head limitation",
+      "demo_n_frames": 749,
+      "n_model_frames": 749,
+      "active_frames": 0,
+      "active_rate": 0.0,
+      "first_raw_trigger_frame": -1,
+      "mean_p": 0.0002
+    },
+    {
+      "clip_id": "C04_siren",
+      "label": "C04 + siren at 12dB (no video)",
+      "group": "noisy_positive_clips",
+      "role": "known_miss",
+      "expected": "trigger",
+      "reason": "contains a real siren at 12dB SNR but only fires 6.1% of frames; known head limitation",
+      "demo_n_frames": 749,
+      "n_model_frames": 749,
+      "active_frames": 46,
+      "active_rate": 0.0614,
+      "first_raw_trigger_frame": 2,
+      "mean_p": 0.0747
+    },
+    {
+      "clip_id": "T09",
+      "label": "T09 - coastal Norway, no siren (audio only)",
+      "group": "negative_control_clips",
+      "role": "known_fp",
+      "expected": "quiet",
+      "reason": "fires 204/749 frames (27.2%) on clean audio; would false-alarm in demo",
+      "demo_n_frames": 749,
+      "n_model_frames": 749,
+      "active_frames": 204,
+      "active_rate": 0.2724,
+      "first_raw_trigger_frame": 287,
+      "mean_p": 0.1298
+    }
+  ]
+}

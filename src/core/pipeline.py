@@ -1,6 +1,6 @@
 from langgraph.graph import StateGraph, START, END
 
-from src.core.state import FrameAudioPacketState
+from src.core.state import FrameAudioPacketStateTyped as FrameAudioPacketState
 from src.exp_a.agent_s_a import s_a_fn
 from src.exp_b.agent_s_b import s_b_fn
 from src.exp_c.agent_s_c import s_c_fn

@@ -1,0 +1,118 @@
+{
+  "source": "measured",
+  "measured_on": [
+    "test/T09",
+    "train/C01",
+    "train/C02",
+    "train/C04"
+  ],
+  "clock": {
+    "sr": 16000,
+    "fps": 30,
+    "samples_per_frame": 533.3333333333334
+  },
+  "verdict": "PASS",
+  "n_clips": 4,
+  "clips": [
+    {
+      "clip_id": "test/T09",
+      "n_frames": 450,
+      "jpg_count": 450,
+      "audio_samples": 240000,
+      "expected_audio_samples": 240000,
+      "verdict": "PASS",
+      "checks": [
+        {
+          "check": "jpg count == clip_meta.n_frames (450)",
+          "ok": true,
+          "detail": "450 jpgs"
+        },
+        {
+          "check": "audio samples ~= n_frames*SR/FPS (240000 +-533)",
+          "ok": true,
+          "detail": "240000 samples, delta 0"
+        },
+        {
+          "check": "n_frames ~= roster seconds*fps (450 +-1)",
+          "ok": true,
+          "detail": "delta 0"
+        }
+      ]
+    },
+    {
+      "clip_id": "train/C01",
+      "n_frames": 450,
+      "jpg_count": 450,
+      "audio_samples": 240000,
+      "expected_audio_samples": 240000,
+      "verdict": "PASS",
+      "checks": [
+        {
+          "check": "jpg count == clip_meta.n_frames (450)",
+          "ok": true,
+          "detail": "450 jpgs"
+        },
+        {
+          "check": "audio samples ~= n_frames*SR/FPS (240000 +-533)",
+          "ok": true,
+          "detail": "240000 samples, delta 0"
+        },
+        {
+          "check": "n_frames ~= roster seconds*fps (450 +-1)",
+          "ok": true,
+          "detail": "delta 0"
+        }
+      ]
+    },
+    {
+      "clip_id": "train/C02",
+      "n_frames": 451,
+      "jpg_count": 451,
+      "audio_samples": 240000,
+      "expected_audio_samples": 240533,
+      "verdict": "PASS",
+      "checks": [
+        {
+          "check": "jpg count == clip_meta.n_frames (451)",
+          "ok": true,
+          "detail": "451 jpgs"
+        },
+        {
+          "check": "audio samples ~= n_frames*SR/FPS (240533 +-533)",
+          "ok": true,
+          "detail": "240000 samples, delta -533"
+        },
+        {
+          "check": "n_frames ~= roster seconds*fps (450 +-1)",
+          "ok": true,
+          "detail": "delta 1"
+        }
+      ]
+    },
+    {
+      "clip_id": "train/C04",
+      "n_frames": 451,
+      "jpg_count": 451,
+      "audio_samples": 240000,
+      "expected_audio_samples": 240533,
+      "verdict": "PASS",
+      "checks": [
+        {
+          "check": "jpg count == clip_meta.n_frames (451)",
+          "ok": true,
+          "detail": "451 jpgs"
+        },
+        {
+          "check": "audio samples ~= n_frames*SR/FPS (240533 +-533)",
+          "ok": true,
+          "detail": "240000 samples, delta -533"
+        },
+        {
+          "check": "n_frames ~= roster seconds*fps (450 +-1)",
+          "ok": true,
+          "detail": "delta 1"
+        }
+      ]
+    }
+  ]
+}

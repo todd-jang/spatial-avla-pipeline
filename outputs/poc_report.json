@@ -1,0 +1,499 @@
+{
+  "spatial": {
+    "source": "synthetic",
+    "caveat": "All DoA figures come from synthesised sirens rendered by scripts/synth_siren_stereo.py. Real recorded sirens are UNMEASURED.",
+    "scenario_names": [
+      "S1_korea"
+    ],
+    "scenarios": [
+      {
+        "scenario": "S1_korea",
+        "grouped_by": "country",
+        "countries": [
+          "KR"
+        ],
+        "clips": [
+          "C01",
+          "C02",
+          "C04"
+        ],
+        "n_clips": 3,
+        "mean_abs_err_deg": 18.3714,
+        "max_abs_err_deg": 117.6333,
+        "ambiguous_frames": 0,
+        "ambiguous_rate": 0.0,
+        "source": "synthetic",
+        "measured_on": [
+          "track_fail_slow",
+          "track_pass_fast_left",
+          "track_static_right"
+        ],
+        "per_clip": [
+          {
+            "clip_id": "C01",
+            "country": "KR",
+            "city": "Seoul (baseline)",
+            "condition": "day",
+            "scenario_mismatch": false,
+            "measured": true,
+            "windows": 436,
+            "siren_track": "track_pass_fast_left",
+            "mean_abs_err_deg": 49.919,
+            "max_abs_err_deg": 117.6333,
+            "ambiguous_frames": 0,
+            "ambiguous_rate": 0.0,
+            "source": "synthetic"
+          },
+          {
+            "clip_id": "C02",
+            "country": "KR",
+            "city": "Seoul Gwanghwamun",
+            "condition": "rain",
+            "scenario_mismatch": false,
+            "measured": true,
+            "windows": 436,
+            "siren_track": "track_fail_slow",
+            "mean_abs_err_deg": 2.9347,
+            "max_abs_err_deg": 12.8812,
+            "ambiguous_frames": 0,
+            "ambiguous_rate": 0.0,
+            "source": "synthetic"
+          },
+          {
+            "clip_id": "C04",
+            "country": "KR",
+            "city": "Seoul Sanggye to Mokdong",
+            "condition": "night",
+            "scenario_mismatch": false,
+            "measured": true,
+            "windows": 436,
+            "siren_track": "track_static_right",
+            "mean_abs_err_deg": 2.2606,
+            "max_abs_err_deg": 11.7228,
+            "ambiguous_frames": 0,
+            "ambiguous_rate": 0.0,
+            "source": "synthetic"
+          }
+        ]
+      }
+    ],
+    "trigger_rows": [
+      {
+        "track": "track_pass_fast",
+        "trigger_fired": true,
+        "peak_doa_rate_dps_ma": 220.643,
+        "renderer_peak_rate_deg_s": 274.435,
+        "n_frames": 450,
+        "source": "synthetic"
+      },
+      {
+        "track": "track_pass_fast_left",
+        "trigger_fired": true,
+        "peak_doa_rate_dps_ma": 220.643,
+        "renderer_peak_rate_deg_s": 274.435,
+        "n_frames": 450,
+        "source": "synthetic"
+      },
+      {
+        "track": "track_fail_slow",
+        "trigger_fired": false,
+        "peak_doa_rate_dps_ma": 10.0,
+        "renderer_peak_rate_deg_s": 10.0,
+        "n_frames": 450,
+        "source": "synthetic"
+      },
+      {
+        "track": "track_static_left",
+        "trigger_fired": false,
+        "peak_doa_rate_dps_ma": 0.0,
+        "renderer_peak_rate_deg_s": 0.0,
+        "n_frames": 450,
+        "source": "synthetic"
+      },
+      {
+        "track": "track_static_right",
+        "trigger_fired": false,
+        "peak_doa_rate_dps_ma": 0.0,
+        "renderer_peak_rate_deg_s": 0.0,
+        "n_frames": 450,
+        "source": "synthetic"
+      }
+    ],
+    "sweep": {
+      "source": "synthetic",
+      "n_angles": 13,
+      "max_abs_err_deg": 0.0886,
+      "mean_abs_err_deg": 0.0412,
+      "ambiguous_frames": 0,
+      "ambiguous_rate": 0.0,
+      "histogram": {
+        "unit": "degrees",
+        "bin_edges": [
+          0.0,
+          0.02,
+          0.05,
+          0.1,
+          0.25,
+          0.5,
+          1.0,
+          2.0,
+          null
+        ],
+        "bin_labels": [
+          "[0.0,0.02)",
+          "[0.02,0.05)",
+          "[0.05,0.1)",
+          "[0.1,0.25)",
+          "[0.25,0.5)",
+          "[0.5,1.0)",
+          "[1.0,2.0)",
+          "[2.0,inf)"
+        ],
+        "counts": [
+          3,
+          6,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "measured_on": [
+        "siren_theta-90",
+        "siren_theta-75",
+        "siren_theta-60",
+        "siren_theta-45",
+        "siren_theta-30",
+        "siren_theta-15",
+        "siren_theta000",
+        "siren_theta015",
+        "siren_theta030",
+        "siren_theta045",
+        "siren_theta060",
+        "siren_theta075",
+        "siren_theta090"
+      ],
+      "rows": [
+        {
+          "clip": "siren_theta-90",
+          "gt_dir_deg": -90.0,
+          "est_dir_deg": -89.9114,
+          "abs_err_deg": 0.0886,
+          "confidence": 0.587,
+          "ambiguous": false
+        },
+        {
+          "clip": "siren_theta-75",
+          "gt_dir_deg": -75.0,
+          "est_dir_deg": -74.9339,
+          "abs_err_deg": 0.0661,
+          "confidence": 0.5913,
+          "ambiguous": false
+        },
+        {
+          "clip": "siren_theta-60",
+          "gt_dir_deg": -60.0,
+          "est_dir_deg": -59.9578,
+          "abs_err_deg": 0.0422,
+          "confidence": 0.5996,
+          "ambiguous": false
+        },
+        {
+          "clip": "siren_theta-45",
+          "gt_dir_deg": -45.0,
+          "est_dir_deg": -44.9671,
+          "abs_err_deg": 0.0329,
+          "confidence": 0.6135,
+          "ambiguous": false
+        },
+        {
+          "clip": "siren_theta-30",
+          "gt_dir_deg": -30.0,
+          "est_dir_deg": -29.976,
+          "abs_err_deg": 0.024,
+          "confidence": 0.6317,
+          "ambiguous": false
+        },
+        {
+          "clip": "siren_theta-15",
+          "gt_dir_deg": -15.0,
+          "est_dir_deg": -14.9858,
+          "abs_err_deg": 0.0142,
+          "confidence": 0.6453,
+          "ambiguous": false
+        },
+        {
+          "clip": "siren_theta000",
+          "gt_dir_deg": 0.0,
+          "est_dir_deg": 0.0,
+          "abs_err_deg": 0.0,
+          "confidence": 0.6506,
+          "ambiguous": false
+        },
+        {
+          "clip": "siren_theta015",
+          "gt_dir_deg": 15.0,
+          "est_dir_deg": 14.9858,
+          "abs_err_deg": 0.0142,
+          "confidence": 0.6453,
+          "ambiguous": false
+        },
+        {
+          "clip": "siren_theta030",
+          "gt_dir_deg": 30.0,
+          "est_dir_deg": 29.976,
+          "abs_err_deg": 0.024,
+          "confidence": 0.6317,
+          "ambiguous": false
+        },
+        {
+          "clip": "siren_theta045",
+          "gt_dir_deg": 45.0,
+          "est_dir_deg": 44.9671,
+          "abs_err_deg": 0.0329,
+          "confidence": 0.6135,
+          "ambiguous": false
+        },
+        {
+          "clip": "siren_theta060",
+          "gt_dir_deg": 60.0,
+          "est_dir_deg": 59.9578,
+          "abs_err_deg": 0.0422,
+          "confidence": 0.5996,
+          "ambiguous": false
+        },
+        {
+          "clip": "siren_theta075",
+          "gt_dir_deg": 75.0,
+          "est_dir_deg": 74.9339,
+          "abs_err_deg": 0.0661,
+          "confidence": 0.5913,
+          "ambiguous": false
+        },
+        {
+          "clip": "siren_theta090",
+          "gt_dir_deg": 90.0,
+          "est_dir_deg": 89.9114,
+          "abs_err_deg": 0.0886,
+          "confidence": 0.587,
+          "ambiguous": false
+        }
+      ]
+    },
+    "status": "incomplete",
+    "missing_clips": [
+      "C03",
+      "C05",
+      "C06",
+      "C07"
+    ],
+    "incomplete_reason": "clips absent from exports/TL_A/train; see evidence task-15 for the YouTube bot-gate that prevented downloading them"
+  },
+  "spatial_complete": false,
+  "mAP": 0.0,
+  "latency": {
+    "p50_ms": 3.06,
+    "p95_ms": 3.85
+  },
+  "T_last": 1791370305023.0,
+  "All_OK": true,
+  "Errors_Count": 0,
+  "rendered_demos": [
+    {
+      "clip_id": "C02",
+      "label": "C02 - Seoul tunnel, wet (video available)",
+      "mp4": "outputs/rendered_demos/stitched_C02.mp4",
+      "frames": 451,
+      "demanded_frames": 451,
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "bytes": 70651957,
+      "latency_p50_ms": 3.06,
+      "latency_p95_ms": 3.84,
+      "t_last_ms": 1791370699562.0,
+      "all_ok": true,
+      "errors": 0,
+      "expected": "quiet",
+      "active_frames": 0,
+      "first_raw_trigger_frame": -1,
+      "verdict": "PASS",
+      "verdict_msg": "[C02] PASS expected=quiet active=0/451 first_raw=f-1",
+      "has_video": true,
+      "doa_source": "measured (audio_siren_stereo_16k.wav)",
+      "audio_track": "ok"
+    },
+    {
+      "clip_id": "C04",
+      "label": "C04 - Seoul bridge (video available)",
+      "mp4": "outputs/rendered_demos/stitched_C04.mp4",
+      "frames": 451,
+      "demanded_frames": 451,
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "bytes": 18489627,
+      "latency_p50_ms": 3.09,
+      "latency_p95_ms": 3.86,
+      "t_last_ms": 1791370710474.0,
+      "all_ok": true,
+      "errors": 0,
+      "expected": "quiet",
+      "active_frames": 0,
+      "first_raw_trigger_frame": -1,
+      "verdict": "PASS",
+      "verdict_msg": "[C04] PASS expected=quiet active=0/451 first_raw=f-1",
+      "has_video": true,
+      "doa_source": "measured (audio_siren_stereo_16k.wav)",
+      "audio_track": "ok"
+    },
+    {
+      "clip_id": "G44-04-Ambulance Siren",
+      "label": "G44-04 ambulance siren (audio only)",
+      "mp4": "outputs/rendered_demos/stitched_G44-04-Ambulance Siren.mp4",
+      "frames": 900,
+      "demanded_frames": 900,
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "bytes": 14578446,
+      "latency_p50_ms": 3.09,
+      "latency_p95_ms": 3.71,
+      "t_last_ms": 1791370730957.0,
+      "all_ok": true,
+      "errors": 0,
+      "expected": "trigger",
+      "active_frames": 900,
+      "first_raw_trigger_frame": 0,
+      "verdict": "PASS",
+      "verdict_msg": "[G44-04-Ambulance Siren] PASS expected=trigger active=900/900 first_raw=f0",
+      "has_video": false,
+      "doa_source": "measured (G44-04-Ambulance Siren_stereo_16k.wav)",
+      "audio_track": "ok"
+    },
+    {
+      "clip_id": "G44-05-Warbling Boat Siren",
+      "label": "G44-05 warbling boat siren (audio only)",
+      "mp4": "outputs/rendered_demos/stitched_G44-05-Warbling Boat Siren.mp4",
+      "frames": 727,
+      "demanded_frames": 727,
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "bytes": 11888626,
+      "latency_p50_ms": 3.18,
+      "latency_p95_ms": 3.99,
+      "t_last_ms": 1791370747826.0,
+      "all_ok": true,
+      "errors": 0,
+      "expected": "trigger",
+      "active_frames": 727,
+      "first_raw_trigger_frame": 0,
+      "verdict": "PASS",
+      "verdict_msg": "[G44-05-Warbling Boat Siren] PASS expected=trigger active=727/727 first_raw=f0",
+      "has_video": false,
+      "doa_source": "measured (G44-05-Warbling Boat Siren_stereo_16k.wav)",
+      "audio_track": "ok"
+    },
+    {
+      "clip_id": "G44-07-Emergency Siren",
+      "label": "G44-07 emergency siren (audio only)",
+      "mp4": "outputs/rendered_demos/stitched_G44-07-Emergency Siren.mp4",
+      "frames": 822,
+      "demanded_frames": 822,
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "bytes": 13583864,
+      "latency_p50_ms": 3.21,
+      "latency_p95_ms": 4.24,
+      "t_last_ms": 1791370767517.0,
+      "all_ok": true,
+      "errors": 0,
+      "expected": "trigger",
+      "active_frames": 820,
+      "first_raw_trigger_frame": 2,
+      "verdict": "PASS",
+      "verdict_msg": "[G44-07-Emergency Siren] PASS expected=trigger active=820/822 first_raw=f2",
+      "has_video": false,
+      "doa_source": "measured (G44-07-Emergency Siren_stereo_16k.wav)",
+      "audio_track": "ok"
+    },
+    {
+      "clip_id": "G44-03-Whoopee Whistle Siren",
+      "label": "G44-03 whoopee whistle (audio only)",
+      "mp4": "outputs/rendered_demos/stitched_G44-03-Whoopee Whistle Siren.mp4",
+      "frames": 3183,
+      "demanded_frames": 3183,
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "bytes": 52604804,
+      "latency_p50_ms": 3.19,
+      "latency_p95_ms": 4.02,
+      "t_last_ms": 1791370840839.0,
+      "all_ok": true,
+      "errors": 0,
+      "expected": "trigger",
+      "active_frames": 2858,
+      "first_raw_trigger_frame": 2,
+      "verdict": "PASS",
+      "verdict_msg": "[G44-03-Whoopee Whistle Siren] PASS expected=trigger active=2858/3183 first_raw=f2",
+      "has_video": false,
+      "doa_source": "measured (G44-03-Whoopee Whistle Siren_stereo_16k.wav)",
+      "audio_track": "ok"
+    },
+    {
+      "clip_id": "G44-02-Air Raid Siren",
+      "label": "G44-02 air raid siren (audio only)",
+      "mp4": "outputs/rendered_demos/stitched_G44-02-Air Raid Siren.mp4",
+      "frames": 1386,
+      "demanded_frames": 1386,
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "bytes": 22906100,
+      "latency_p50_ms": 3.29,
+      "latency_p95_ms": 4.34,
+      "t_last_ms": 1791370875221.0,
+      "all_ok": true,
+      "errors": 0,
+      "expected": "trigger",
+      "active_frames": 1194,
+      "first_raw_trigger_frame": 0,
+      "verdict": "PASS",
+      "verdict_msg": "[G44-02-Air Raid Siren] PASS expected=trigger active=1194/1386 first_raw=f0",
+      "has_video": false,
+      "doa_source": "measured (G44-02-Air Raid Siren_stereo_16k.wav)",
+      "audio_track": "ok"
+    },
+    {
+      "clip_id": "G44-01-Sirens",
+      "label": "G44-01 real siren (audio only)",
+      "mp4": "outputs/rendered_demos/stitched_G44-01-Sirens.mp4",
+      "frames": 1661,
+      "demanded_frames": 1661,
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "bytes": 27307716,
+      "latency_p50_ms": 3.21,
+      "latency_p95_ms": 3.99,
+      "t_last_ms": 1791370913616.0,
+      "all_ok": true,
+      "errors": 0,
+      "expected": "trigger",
+      "active_frames": 1036,
+      "first_raw_trigger_frame": 5,
+      "verdict": "PASS",
+      "verdict_msg": "[G44-01-Sirens] PASS expected=trigger active=1036/1661 first_raw=f5",
+      "has_video": false,
+      "doa_source": "measured (G44-01-Sirens_stereo_16k.wav)",
+      "audio_track": "ok"
+    }
+  ],
+  "render_source": "synthesised siren audio; downloaded dashcam video",
+  "demo_render_verdict": "PASS"
+}

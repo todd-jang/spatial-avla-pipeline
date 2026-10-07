@@ -1,0 +1,435 @@
+{
+  "schema": "abl-report-sb/v1",
+  "method": "WavLM-base-plus L2-logistic head (measured p_siren per frame)",
+  "baseline": {
+    "name": "mock_constant",
+    "constant": 0.0
+  },
+  "trigger_rule": {
+    "siren_trigger_threshold": 0.8,
+    "hysteresis_hold_frames": 35,
+    "head_accuracy": 0.8272,
+    "head_confusion": {
+      "tp": 6777,
+      "tn": 2880,
+      "fp": 116,
+      "fn": 1902
+    }
+  },
+  "clips": {
+    "G44-01-Sirens": {
+      "condition": "real_siren",
+      "group": "real_sirens",
+      "n_frames": 1661,
+      "baseline": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "p50": 0.0,
+        "p90": 0.0,
+        "p99": 0.0,
+        "max": 0.0,
+        "n": 1661,
+        "siren_trigger_rate": 0.0,
+        "is_triggered_rate": 0.0
+      },
+      "measured": {
+        "mean": 0.5904,
+        "sd": 0.2981,
+        "p50": 0.6933,
+        "p90": 0.9266,
+        "p99": 0.9674,
+        "max": 0.9994,
+        "n": 1661,
+        "siren_trigger_rate": 0.345,
+        "is_triggered_rate": 0.6237
+      },
+      "head_lloc_accuracy": 0.6171
+    },
+    "G44-02-Air Raid Siren": {
+      "condition": "real_siren",
+      "group": "real_sirens",
+      "n_frames": 1386,
+      "baseline": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "p50": 0.0,
+        "p90": 0.0,
+        "p99": 0.0,
+        "max": 0.0,
+        "n": 1386,
+        "siren_trigger_rate": 0.0,
+        "is_triggered_rate": 0.0
+      },
+      "measured": {
+        "mean": 0.6634,
+        "sd": 0.3803,
+        "p50": 0.8826,
+        "p90": 1.0,
+        "p99": 1.0,
+        "max": 1.0,
+        "n": 1386,
+        "siren_trigger_rate": 0.5527,
+        "is_triggered_rate": 0.8615
+      },
+      "head_lloc_accuracy": 0.6674
+    },
+    "G44-03-Whoopee Whistle Siren": {
+      "condition": "real_siren",
+      "group": "real_sirens",
+      "n_frames": 3183,
+      "baseline": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "p50": 0.0,
+        "p90": 0.0,
+        "p99": 0.0,
+        "max": 0.0,
+        "n": 3183,
+        "siren_trigger_rate": 0.0,
+        "is_triggered_rate": 0.0
+      },
+      "measured": {
+        "mean": 0.7627,
+        "sd": 0.3345,
+        "p50": 0.9629,
+        "p90": 0.9999,
+        "p99": 1.0,
+        "max": 1.0,
+        "n": 3183,
+        "siren_trigger_rate": 0.6673,
+        "is_triggered_rate": 0.8979
+      },
+      "head_lloc_accuracy": 0.7823
+    },
+    "G44-04-Ambulance Siren": {
+      "condition": "real_siren",
+      "group": "real_sirens",
+      "n_frames": 900,
+      "baseline": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "p50": 0.0,
+        "p90": 0.0,
+        "p99": 0.0,
+        "max": 0.0,
+        "n": 900,
+        "siren_trigger_rate": 0.0,
+        "is_triggered_rate": 0.0
+      },
+      "measured": {
+        "mean": 0.9513,
+        "sd": 0.1711,
+        "p50": 0.9992,
+        "p90": 1.0,
+        "p99": 1.0,
+        "max": 1.0,
+        "n": 900,
+        "siren_trigger_rate": 0.9422,
+        "is_triggered_rate": 1.0
+      },
+      "head_lloc_accuracy": 0.96
+    },
+    "G44-05-Warbling Boat Siren": {
+      "condition": "real_siren",
+      "group": "real_sirens",
+      "n_frames": 727,
+      "baseline": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "p50": 0.0,
+        "p90": 0.0,
+        "p99": 0.0,
+        "max": 0.0,
+        "n": 727,
+        "siren_trigger_rate": 0.0,
+        "is_triggered_rate": 0.0
+      },
+      "measured": {
+        "mean": 0.9778,
+        "sd": 0.086,
+        "p50": 0.9996,
+        "p90": 1.0,
+        "p99": 1.0,
+        "max": 1.0,
+        "n": 727,
+        "siren_trigger_rate": 0.9629,
+        "is_triggered_rate": 1.0
+      },
+      "head_lloc_accuracy": 0.9931
+    },
+    "G44-07-Emergency Siren": {
+      "condition": "real_siren",
+      "group": "real_sirens",
+      "n_frames": 822,
+      "baseline": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "p50": 0.0,
+        "p90": 0.0,
+        "p99": 0.0,
+        "max": 0.0,
+        "n": 822,
+        "siren_trigger_rate": 0.0,
+        "is_triggered_rate": 0.0
+      },
+      "measured": {
+        "mean": 0.858,
+        "sd": 0.1979,
+        "p50": 0.9596,
+        "p90": 0.9991,
+        "p99": 1.0,
+        "max": 1.0,
+        "n": 822,
+        "siren_trigger_rate": 0.7336,
+        "is_triggered_rate": 0.9976
+      },
+      "head_lloc_accuracy": 0.9136
+    },
+    "C01_siren": {
+      "condition": "siren_mixed",
+      "group": "noisy_positive_clips",
+      "n_frames": 749,
+      "baseline": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "p50": 0.0,
+        "p90": 0.0,
+        "p99": 0.0,
+        "max": 0.0,
+        "n": 749,
+        "siren_trigger_rate": 0.0,
+        "is_triggered_rate": 0.0
+      },
+      "measured": {
+        "mean": 0.0001,
+        "sd": 0.0004,
+        "p50": 0.0,
+        "p90": 0.0003,
+        "p99": 0.0023,
+        "max": 0.0042,
+        "n": 749,
+        "siren_trigger_rate": 0.0,
+        "is_triggered_rate": 0.0
+      },
+      "head_lloc_accuracy": null
+    },
+    "C02_siren": {
+      "condition": "siren_mixed",
+      "group": "noisy_positive_clips",
+      "n_frames": 749,
+      "baseline": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "p50": 0.0,
+        "p90": 0.0,
+        "p99": 0.0,
+        "max": 0.0,
+        "n": 749,
+        "siren_trigger_rate": 0.0,
+        "is_triggered_rate": 0.0
+      },
+      "measured": {
+        "mean": 0.0002,
+        "sd": 0.0015,
+        "p50": 0.0,
+        "p90": 0.0002,
+        "p99": 0.0044,
+        "max": 0.0245,
+        "n": 749,
+        "siren_trigger_rate": 0.0,
+        "is_triggered_rate": 0.0
+      },
+      "head_lloc_accuracy": null
+    },
+    "C04_siren": {
+      "condition": "siren_mixed",
+      "group": "noisy_positive_clips",
+      "n_frames": 749,
+      "baseline": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "p50": 0.0,
+        "p90": 0.0,
+        "p99": 0.0,
+        "max": 0.0,
+        "n": 749,
+        "siren_trigger_rate": 0.0,
+        "is_triggered_rate": 0.0
+      },
+      "measured": {
+        "mean": 0.0747,
+        "sd": 0.1504,
+        "p50": 0.0162,
+        "p90": 0.2068,
+        "p99": 0.7591,
+        "max": 0.8112,
+        "n": 749,
+        "siren_trigger_rate": 0.0053,
+        "is_triggered_rate": 0.0614
+      },
+      "head_lloc_accuracy": null
+    },
+    "C01": {
+      "condition": "day",
+      "group": "negative_control_clips",
+      "n_frames": 749,
+      "baseline": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "p50": 0.0,
+        "p90": 0.0,
+        "p99": 0.0,
+        "max": 0.0,
+        "n": 749,
+        "siren_trigger_rate": 0.0,
+        "is_triggered_rate": 0.0
+      },
+      "measured": {
+        "mean": 0.0513,
+        "sd": 0.1569,
+        "p50": 0.0001,
+        "p90": 0.1158,
+        "p99": 0.8162,
+        "max": 0.9849,
+        "n": 749,
+        "siren_trigger_rate": 0.012,
+        "is_triggered_rate": 0.1989
+      },
+      "head_lloc_accuracy": 0.964
+    },
+    "C02": {
+      "condition": "rain",
+      "group": "negative_control_clips",
+      "n_frames": 749,
+      "baseline": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "p50": 0.0,
+        "p90": 0.0,
+        "p99": 0.0,
+        "max": 0.0,
+        "n": 749,
+        "siren_trigger_rate": 0.0,
+        "is_triggered_rate": 0.0
+      },
+      "measured": {
+        "mean": 0.0002,
+        "sd": 0.001,
+        "p50": 0.0,
+        "p90": 0.0002,
+        "p99": 0.0059,
+        "max": 0.0091,
+        "n": 749,
+        "siren_trigger_rate": 0.0,
+        "is_triggered_rate": 0.0
+      },
+      "head_lloc_accuracy": 1.0
+    },
+    "C04": {
+      "condition": "night",
+      "group": "negative_control_clips",
+      "n_frames": 749,
+      "baseline": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "p50": 0.0,
+        "p90": 0.0,
+        "p99": 0.0,
+        "max": 0.0,
+        "n": 749,
+        "siren_trigger_rate": 0.0,
+        "is_triggered_rate": 0.0
+      },
+      "measured": {
+        "mean": 0.0229,
+        "sd": 0.1305,
+        "p50": 0.0,
+        "p90": 0.0035,
+        "p99": 0.8855,
+        "max": 0.9816,
+        "n": 749,
+        "siren_trigger_rate": 0.0147,
+        "is_triggered_rate": 0.0187
+      },
+      "head_lloc_accuracy": 0.976
+    },
+    "T09": {
+      "condition": "day",
+      "group": "negative_control_clips",
+      "n_frames": 749,
+      "baseline": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "p50": 0.0,
+        "p90": 0.0,
+        "p99": 0.0,
+        "max": 0.0,
+        "n": 749,
+        "siren_trigger_rate": 0.0,
+        "is_triggered_rate": 0.0
+      },
+      "measured": {
+        "mean": 0.1298,
+        "sd": 0.2327,
+        "p50": 0.0127,
+        "p90": 0.491,
+        "p99": 0.9722,
+        "max": 0.9984,
+        "n": 749,
+        "siren_trigger_rate": 0.0427,
+        "is_triggered_rate": 0.2724
+      },
+      "head_lloc_accuracy": 0.9052
+    }
+  },
+  "conditions": {
+    "real_siren": {
+      "clips": [
+        "G44-01-Sirens",
+        "G44-02-Air Raid Siren",
+        "G44-03-Whoopee Whistle Siren",
+        "G44-04-Ambulance Siren",
+        "G44-05-Warbling Boat Siren",
+        "G44-07-Emergency Siren"
+      ],
+      "baseline_trigger_rate": 0.0,
+      "measured_trigger_rate": 0.7006,
+      "measured_is_triggered_rate": 0.8968
+    },
+    "siren_mixed": {
+      "clips": [
+        "C01_siren",
+        "C02_siren",
+        "C04_siren"
+      ],
+      "baseline_trigger_rate": 0.0,
+      "measured_trigger_rate": 0.0018,
+      "measured_is_triggered_rate": 0.0205
+    },
+    "day": {
+      "clips": [
+        "C01",
+        "T09"
+      ],
+      "baseline_trigger_rate": 0.0,
+      "measured_trigger_rate": 0.0273,
+      "measured_is_triggered_rate": 0.2356
+    },
+    "rain": {
+      "clips": [
+        "C02"
+      ],
+      "baseline_trigger_rate": 0.0,
+      "measured_trigger_rate": 0.0,
+      "measured_is_triggered_rate": 0.0
+    },
+    "night": {
+      "clips": [
+        "C04"
+      ],
+      "baseline_trigger_rate": 0.0,
+      "measured_trigger_rate": 0.0147,
+      "measured_is_triggered_rate": 0.0187
+    }
+  }
+}

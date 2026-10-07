@@ -108,14 +108,15 @@
 **알고리즘**:
 ```
 MA_w5(va_list) → vision_anomaly_ma
-MA_w5(dd_list) → doa_change_rate_ma
+Δdoa × 30fps → doa_change_rate_dps; MA_w5 → doa_change_rate_dps_ma
 
 raw_trigger:
-  p_siren >= 0.80          → 사이렌 고확률
-  doa_change_rate_ma >= 15 → 음원 방향 급변
-  lead_lost == True        → 선행차 소실
-  lane_lost_count >= 3     → 차선 3회 연속 손실
-  vision_anomaly_ma >= 0.75→ 비전 이상치 누적
+  p_siren >= 0.80           → 사이렌 고확률
+  doa_change_rate_dps_ma >= 120.0 → 음원 방향 급변 (deg/s)
+  ambiguous DoA             → rate 0, 직전 확정 방향 유지
+  lead_lost == True         → 선행차 소실
+  lane_lost_count >= 3      → 차선 3회 연속 손실
+  vision_anomaly_ma >= 0.75 → 비전 이상치 누적
 
 Hysteresis FSM:
   [idle] --(raw)--→ [active] (active_until = fi + 35)

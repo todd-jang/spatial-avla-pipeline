@@ -1,0 +1,11 @@
+{
+  "model": "rtdetr-l",
+  "device": "mps",
+  "min_conf": 0.25,
+  "clips": [
+    "T09",
+    "C01",
+    "C02",
+    "C04"
+  ]
+}

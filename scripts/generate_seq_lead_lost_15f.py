@@ -27,6 +27,18 @@ def main():
             "frame_idx": i,
             "ts_ms": ts,
             "timestamp_ms": ts,
+            # contract-required at top level; shapes from mocks/mock_base.json
+            "audio": {
+                "siren": {"detected": False, "confidence": 0, "type": "none"},
+                # gt_dir_deg -1 = unknown sentinel (see contract); this fixture carries no audio.
+                "doa": {"dir_deg": 0.0, "gt_dir_deg": -1.0, "confidence": 0.0, "direction": "center"},
+                "audio_features_b64": "",
+            },
+            "vlm_payload": {
+                "trigger": False,
+                "mode": "symbolic",
+                "prompt_context": "",
+            },
             "event_trigger": {
                 "details": {
                     "vision_anomaly_score": 0.2 + (0.05 * i if i < 8 else 0.0),

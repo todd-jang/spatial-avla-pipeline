@@ -1,0 +1,142 @@
+{
+  "schema": "abl-report-sa/v1",
+  "method": "rtdetr-l + configs/vision_risk_weights.json",
+  "baseline": {
+    "name": "mock_constant",
+    "constant": 0.2
+  },
+  "trigger_rule": {
+    "vision_anomaly_ma_threshold": 0.75,
+    "ma_window": 5
+  },
+  "clips": {
+    "C01": {
+      "condition": "day",
+      "n_frames": 450,
+      "ms_per_frame": 241.79,
+      "ms_p50": 232.46,
+      "baseline": {
+        "mean": 0.2,
+        "sd": 0.0,
+        "p50": 0.2,
+        "p90": 0.2,
+        "p99": 0.2,
+        "max": 0.2,
+        "n": 450,
+        "ma5_trigger_rate": 0.0
+      },
+      "rtdetr": {
+        "mean": 0.4119,
+        "sd": 0.0781,
+        "p50": 0.4405,
+        "p90": 0.4901,
+        "p99": 0.5039,
+        "max": 0.5116,
+        "n": 450,
+        "ma5_trigger_rate": 0.0
+      }
+    },
+    "C02": {
+      "condition": "rain",
+      "n_frames": 451,
+      "ms_per_frame": 249.84,
+      "ms_p50": 230.89,
+      "baseline": {
+        "mean": 0.2,
+        "sd": 0.0,
+        "p50": 0.2,
+        "p90": 0.2,
+        "p99": 0.2,
+        "max": 0.2,
+        "n": 451,
+        "ma5_trigger_rate": 0.0
+      },
+      "rtdetr": {
+        "mean": 0.4984,
+        "sd": 0.0309,
+        "p50": 0.5086,
+        "p90": 0.5308,
+        "p99": 0.5345,
+        "max": 0.5355,
+        "n": 451,
+        "ma5_trigger_rate": 0.0
+      }
+    },
+    "C04": {
+      "condition": "night",
+      "n_frames": 451,
+      "ms_per_frame": 254.97,
+      "ms_p50": 246.14,
+      "baseline": {
+        "mean": 0.2,
+        "sd": 0.0,
+        "p50": 0.2,
+        "p90": 0.2,
+        "p99": 0.2,
+        "max": 0.2,
+        "n": 451,
+        "ma5_trigger_rate": 0.0
+      },
+      "rtdetr": {
+        "mean": 0.28,
+        "sd": 0.0796,
+        "p50": 0.2758,
+        "p90": 0.3817,
+        "p99": 0.4643,
+        "max": 0.4774,
+        "n": 451,
+        "ma5_trigger_rate": 0.0
+      }
+    },
+    "T09": {
+      "condition": "day",
+      "n_frames": 450,
+      "ms_per_frame": 301.28,
+      "ms_p50": 293.54,
+      "baseline": {
+        "mean": 0.2,
+        "sd": 0.0,
+        "p50": 0.2,
+        "p90": 0.2,
+        "p99": 0.2,
+        "max": 0.2,
+        "n": 450,
+        "ma5_trigger_rate": 0.0
+      },
+      "rtdetr": {
+        "mean": 0.0865,
+        "sd": 0.109,
+        "p50": 0.0,
+        "p90": 0.2468,
+        "p99": 0.334,
+        "max": 0.4683,
+        "n": 450,
+        "ma5_trigger_rate": 0.0
+      }
+    }
+  },
+  "conditions": {
+    "day": {
+      "clips": [
+        "C01",
+        "T09"
+      ],
+      "baseline_mean": 0.2,
+      "rtdetr_mean": 0.2492
+    },
+    "rain": {
+      "clips": [
+        "C02"
+      ],
+      "baseline_mean": 0.2,
+      "rtdetr_mean": 0.4984
+    },
+    "night": {
+      "clips": [
+        "C04"
+      ],
+      "baseline_mean": 0.2,
+      "rtdetr_mean": 0.28
+    }
+  }
+}

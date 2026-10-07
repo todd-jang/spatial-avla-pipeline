@@ -4,6 +4,7 @@ fastapi>=0.100.0
 uvicorn>=0.20.0
 gradio>=4.44.0
 torch>=2.0.0
+ultralytics>=8.3.0
 transformers>=4.40.0
 torchaudio>=2.0.0
 opencv-python
