@@ -118,7 +118,6 @@ python run_gradio.py
 (또는 터미널에 출력된 share URL 사용)
 
 UI에서 mp4 동영상 업로드 → **Run** 버튼 → 2×2 실시간 스트리밍 확인.
-
 ---
 
 ## 테스트 방법
