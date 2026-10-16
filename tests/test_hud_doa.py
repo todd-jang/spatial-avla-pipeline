@@ -89,6 +89,24 @@ def test_no_doa_leaves_tile_untouched():
     assert np.array_equal(out, tile)
 
 
+def test_unconnected_doa_is_not_rendered_as_zero_degrees(monkeypatch):
+    texts = []
+    from src.app import multiview
+
+    original_put_text = multiview.cv2.putText
+
+    def capture_text(image, text, *args, **kwargs):
+        texts.append(text)
+        return original_put_text(image, text, *args, **kwargs)
+
+    monkeypatch.setattr(multiview.cv2, "putText", capture_text)
+    _doa_strip(
+        np.zeros((TILE_H, TILE_W, 3), dtype=np.uint8),
+        {"dir_deg": 0.0, "gt_dir_deg": -1.0, "confidence": 0.0},
+    )
+    assert texts == ["DOA unavailable (no live audio input) conf=n/a"]
+
+
 def test_readout_sits_below_the_hud_bar_not_as_a_new_panel():
     tile = tile_with({"dir_deg": 5.0, "gt_dir_deg": 5.0, "confidence": 0.5})
     lo, hi = DOA_STRIP_ROWS

@@ -61,3 +61,14 @@ class P_sirenProvider:
         if cosines and 0 <= frame_idx < len(cosines):
             return float(cosines[frame_idx])
         return float(entry.get("cosine_vs_synth_centroid", 0.0))
+
+    def has_frame_value(self, clip_id: str, frame_idx: int) -> bool:
+        """Whether a report contains a measured value rather than the 0.0 fallback."""
+        entry = self._entry(clip_id)
+        if not entry:
+            return False
+        for key in ("frame_p_siren", "frame_cosines"):
+            values = entry.get(key)
+            if values and 0 <= frame_idx < len(values):
+                return True
+        return "cosine_vs_synth_centroid" in entry

@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, ROOT.as_posix())
 
 from src.core.audio.p_siren_provider import P_sirenProvider  # noqa: E402
+from src.core import bridge as bridge_module  # noqa: E402
 from src.core.bridge import GraphBridge  # noqa: E402
 
 REAL_REPORT = ROOT / "outputs" / "p_siren_report.json"
@@ -94,6 +95,19 @@ class TestP_sirenProvider:
 
 
 class TestBridgeP_siren:
+    def test_stateful_bridge_forwards_frame_audio_source(self, monkeypatch):
+        monkeypatch.setattr(bridge_module.graph_ui, "invoke", lambda state: state)
+        bridge = GraphBridge()
+
+        result = bridge.invoke_frame_stateful(
+            30,
+            1000.0,
+            clip_id="C01",
+            audio_path="/tmp/window-source.wav",
+        )
+
+        assert result["audio_path"] == "/tmp/window-source.wav"
+
     def test_real_clip_seeds_measured_p_siren(self, tmp_path):
         cosines = [0.42, 0.55, 0.61, 0.38]
         report = make_report(tmp_path, cosines)

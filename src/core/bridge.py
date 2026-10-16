@@ -27,6 +27,7 @@ class GraphBridge:
         s["frame_idx"] = int(frame_idx)
         s["ts_ms"] = float(ts_ms)
         s["timestamp_ms"] = float(ts_ms)
+        siren_available = self.p_siren.has_frame_value(clip_id, int(frame_idx))
         siren_score = self.p_siren.frame_value(clip_id, int(frame_idx))
         s.setdefault(
             "event_trigger",
@@ -76,6 +77,9 @@ class GraphBridge:
                 "_agent_finished_ts_ms": {},
             },
         )
+        s["meta_exec"].setdefault("score_status", {})["siren"] = (
+            "available" if siren_available else "report_unavailable"
+        )
         return s
 
     def invoke_frame(self, frame_idx: int, ts_ms: float, clip_id="siren_left_01"):
@@ -91,7 +95,8 @@ class GraphBridge:
             return s
 
     def invoke_frame_stateful(self, frame_idx: int, ts_ms: float, clip_id="siren_left_01",
-                              prev_state=None):
+                              prev_state=None, vision_anomaly_score=None,
+                              audio_path=None):
         """Run frame N threading the previous frame's full state.
 
         Stateless ``invoke_frame`` deep-copies a fresh mock every call, which means
@@ -108,6 +113,11 @@ class GraphBridge:
         t0 = time.perf_counter()
         base = prev_state if prev_state is not None else self._base_ui
         s = self._prime(copy.deepcopy(base), frame_idx, ts_ms, clip_id)
+        s["audio_path"] = str(audio_path) if audio_path is not None else None
+        if vision_anomaly_score is not None:
+            s["event_trigger"]["details"]["vision_anomaly_score"] = float(
+                vision_anomaly_score
+            )
         try:
             res = graph_ui.invoke(s)
             res.setdefault("meta_exec", {})["lat_ms"] = round((time.perf_counter() - t0) * 1000.0, 2)

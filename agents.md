@@ -109,6 +109,10 @@
 ```
 MA_w5(va_list) → vision_anomaly_ma
 Δdoa × 30fps → doa_change_rate_dps; MA_w5 → doa_change_rate_dps_ma
+MAE 점수 캘리브레이션 (mini-MAE, causal robust z):
+  scale = max(1.4826·MAD, 0.2, 0.03·|median|)
+  mae_z = (cur - median_trailing) / scale ; MA_w5 → mae_z_ma
+  → mae_trigger = (mae_z_ma >= 5.0), opt-in  (기본 OFF, AVLA_MAE_TRIGGER_ENABLED=1 시 활성; meta_exec.mae_trigger_rule 에 감사 기록)
 
 raw_trigger:
   p_siren >= 0.80           → 사이렌 고확률
@@ -117,6 +121,7 @@ raw_trigger:
   lead_lost == True         → 선행차 소실
   lane_lost_count >= 3      → 차선 3회 연속 손실
   vision_anomaly_ma >= 0.75 → 비전 이상치 누적
+  mae_trigger == True       → mini-MAE robust-z 급등 (기본 OFF, scale floor 로 정상 클립 오탐 방지)
 
 Hysteresis FSM:
   [idle] --(raw)--→ [active] (active_until = fi + 35)

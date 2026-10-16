@@ -59,6 +59,7 @@ class FrameAudioPacketStateTyped(TypedDict):
     timestamp_ms:  Annotated[float,          _last]
     video_path:    Annotated[str,            _last]
     wav_path:      Annotated[str,            _last]
+    audio_path:    Annotated[str | None,     _last]
     img:           Annotated[Dict[str, Any], _merge_dict]
     audio_win:     Annotated[Dict[str, Any], _merge_dict]
     doa:           Annotated[Dict[str, Any], _merge_dict]

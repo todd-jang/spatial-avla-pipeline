@@ -9,6 +9,7 @@ def s_i_init_fn(state: dict) -> dict:
     s.setdefault("timestamp_ms", float(s.get("timestamp_ms", s.get("ts_ms", 0.0))))
     s.setdefault("video_path", s.get("video_path", "raw_videos/sample.mp4"))
     s.setdefault("wav_path", s.get("wav_path", "raw_videos/sample.wav"))
+    s.setdefault("audio_path", None)
     s.setdefault("img", {"raw_b64": "", "clean_b64": "", "quad_b64": ""})
     s.setdefault("audio_win", {"start_ms": 0, "end_ms": 320, "sr": 16000})
     s.setdefault("doa", {"dir_deg": 0.0, "gt_dir_deg": -1.0, "confidence": 0.0, "direction": "center"})

@@ -171,6 +171,32 @@ def segment_audio(seg: dict) -> tuple[Path, Path | None]:
     return wav, None
 
 
+def template_audio_path(seg: dict, audio_source: str) -> Path | None:
+    """Resolve the selected AST audio variant without silently changing sources."""
+    if audio_source not in ("with_siren", "untouched"):
+        raise ValueError(f"Unknown audio source {audio_source!r}")
+    if not seg.get("has_video"):
+        return segment_audio(seg)[0]
+
+    clip_id = seg["clip_id"]
+    for split in ("train", "test"):
+        clip_dir = ROOT / "exports" / "TL_A" / split / clip_id
+        meta_path = clip_dir / "clip_meta.json"
+        if not meta_path.is_file():
+            continue
+        meta = json.loads(meta_path.read_text())
+        relative_path = meta.get("audio", {}).get(audio_source)
+        if not isinstance(relative_path, str):
+            return None
+        path = clip_dir / relative_path
+        if not path.is_file():
+            raise FileNotFoundError(
+                f"{audio_source} audio missing for {clip_id}: {path}"
+            )
+        return path
+    raise FileNotFoundError(f"clip metadata missing for AST source: {clip_id}")
+
+
 def resolve_frames(seg: dict, n: int) -> list[Path] | None:
     """Video frame paths for video segments, None for audio-only segments."""
     if not seg.get("has_video"):
