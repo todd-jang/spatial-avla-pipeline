@@ -214,6 +214,12 @@ def _perception_panel(tile, frame, frame_idx, graph_res):
         f"active={bool(ev.get('is_triggered', False))} "
         f"hyst={str(hysteresis.get('state', 'n/a')).upper()} hold={remaining}f"
     )
+    trigger_not_fused = (
+        (meta.get("score_status") or {}).get("trigger")
+        == "not_fused_for_custom_upload"
+    )
+    if trigger_not_fused:
+        trigger_status = "n/a (custom scores; fusion not calibrated)"
     if vision_unavailable and siren_score is None:
         trigger_status = "n/a (no measured live perception input)"
     doa_direction = doa.get("direction", "n/a")
@@ -289,6 +295,10 @@ def process_multi_view_frame(frame, frame_idx, graph_res):
     vp = graph_res.get("vlm_payload", {})
     plan = graph_res.get("plan", {})
     meta = graph_res.get("meta_exec", {}) or {}
+    trigger_not_fused = (
+        (meta.get("score_status") or {}).get("trigger")
+        == "not_fused_for_custom_upload"
+    )
 
     va_ma = float(det.get("vision_anomaly_ma", 0.0) or 0.0)
     is_trig = bool(ev.get("is_triggered", False))
@@ -304,10 +314,19 @@ def process_multi_view_frame(frame, frame_idx, graph_res):
     if not (graph_res.get("percept", {}) or {}).get("has_lead"):
         cv2.rectangle(gt, (TILE_W - 210, TILE_H - 40), (TILE_W - 10, TILE_H - 14), GT_GREEN, 2)
         cv2.putText(gt, "lead lost", (TILE_W - 200, TILE_H - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, GT_GREEN, 1)
-    t_gt = draw_hud(gt, "[GT] Ground Truth", GT_GREEN)
+    custom_inference = meta.get("custom_inference")
+    t_gt = draw_hud(
+        gt,
+        "[UPLOAD] Live RT-DETR" if custom_inference else "[GT] Ground Truth",
+        GT_GREEN,
+    )
     _status_strip(t_gt, meta)
 
-    t_base = draw_hud(_fit(frame), "[Baseline] Standard Detection", PASSIVE)
+    t_base = draw_hud(
+        _fit(frame),
+        "[UPLOAD] Source video" if custom_inference else "[Baseline] Standard Detection",
+        PASSIVE,
+    )
 
     t_a = draw_hud(
         _fit(frame),
@@ -325,7 +344,7 @@ def process_multi_view_frame(frame, frame_idx, graph_res):
         f"[Siren] p:{_score_text(det, 'p_siren')} "
         f"AST:{_score_text(det, 'siren_score_mae', 4) if 'siren_score_mae' in det else _score_text(det, 'siren_score_template')} "
         f"MAE:{_detection_text(det.get('siren_detected_mae'))} "
-        f"HYST:{hy_s} TRIG:{is_trig}",
+        f"HYST:{hy_s} TRIG:{'n/a' if trigger_not_fused else is_trig}",
         ALERT if is_trig else GT_GREEN,
     )
     _doa_strip(t_b, graph_res.get("doa") or (graph_res.get("audio") or {}).get("doa") or {})
@@ -335,9 +354,14 @@ def process_multi_view_frame(frame, frame_idx, graph_res):
         f"AST strength: {det.get('siren_strength_mae') or 'n/a'}",
     ])
 
+    audio_status = (
+        "AST template score: live 2 s windows"
+        if custom_inference
+        else "Audio classifier: offline scores only"
+    )
     cv2.putText(
         t_b,
-        "Audio classifier: offline scores only",
+        audio_status,
         (10, TILE_H - 38),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.48,

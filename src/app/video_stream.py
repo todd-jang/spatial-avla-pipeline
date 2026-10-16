@@ -22,6 +22,7 @@ def stream_uploaded_video(
     analysis_fps: float = DEFAULT_ANALYSIS_FPS,
     error_type: type[Exception] = ValueError,
     max_duration_seconds: float = MAX_UPLOAD_DURATION_SECONDS,
+    analyze_frame: Callable | None = None,
 ) -> Iterator[np.ndarray]:
     """Render smooth video frames while refreshing graph state at analysis_fps."""
     if analysis_fps <= 0:
@@ -65,12 +66,26 @@ def stream_uploaded_video(
 
             video_time = frame_idx / source_fps
             if latest_res is None or video_time >= next_analysis_at:
+                inference = (
+                    analyze_frame(frame, frame_idx, video_time)
+                    if analyze_frame is not None
+                    else None
+                )
                 latest_res = bridge.invoke_frame_stateful(
                     frame_idx,
                     ts_ms=start_wall_ms + video_time * 1000.0,
                     clip_id="custom_upload",
                     prev_state=prev,
                 )
+                if inference is not None:
+                    for key, value in inference.items():
+                        if key == "meta_exec":
+                            latest_res[key] = {
+                                **latest_res.get(key, {}),
+                                **value,
+                            }
+                        else:
+                            latest_res[key] = value
                 prev = latest_res
                 analyzed_idx = frame_idx
                 next_analysis_at = video_time + analysis_interval

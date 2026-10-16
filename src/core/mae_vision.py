@@ -301,6 +301,16 @@ class MaeVisionSirenScorer:
             ).item()
         )
 
+    def score_waveform(self, waveform: np.ndarray, sample_rate: int) -> float | None:
+        """Score an arbitrary audio window against the configured AST templates."""
+        templates = self._load_templates()
+        if templates is None:
+            return None
+        feature = ast_feature_from_waveform(
+            self._get_model(), waveform, sample_rate, self._device
+        )
+        return self._score_feature(feature, templates)
+
     def score_frame(
         self,
         state: dict,

@@ -33,6 +33,7 @@ golden/
 # Jupyter
 .ipynb_checkpoints/
 *.ipynb
+!notebooks/06_colab_gpu_inference.ipynb
 
 # OS
 .DS_Store

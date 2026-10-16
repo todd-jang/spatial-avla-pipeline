@@ -23,7 +23,11 @@ the verified sequence and the UI says so.
 from __future__ import annotations
 
 import copy
+import io
+import math
+import subprocess
 import time
+import wave
 
 import cv2
 import gradio as gr
@@ -54,7 +58,15 @@ from src.app.live_monitor import (  # noqa: E402
 )
 from src.app.mpc_simulation import compute_fixed_demo_mpc  # noqa: E402
 from src.app.qwen_action import QwenActionAdvisor  # noqa: E402
+from src.app.qwen_audio import QwenAudioAnalyzer  # noqa: E402
 from src.core.bridge import GraphBridge  # noqa: E402
+from src.core.mae_vision import (  # noqa: E402
+    SIREN_HOP_SECONDS,
+    SIREN_WINDOW_SECONDS,
+    VIDEO_FPS,
+    MaeVisionSirenScorer,
+    siren_detected,
+)
 
 bridge = GraphBridge(fast_mode=True)
 MANIFEST = load_manifest()
@@ -67,6 +79,8 @@ SEG_ITEMS = [f"{s['order']:02d} | {s['clip_id']} | {s['expected']} | {s['label']
 SEG_MAP = dict(zip(SEG_ITEMS, SEGMENTS))
 PRESET_CHOICES = [FULL_SEQUENCE, CUSTOM_UPLOAD] + SEG_ITEMS
 live_detector = LiveObjectDetector()
+upload_audio_scorer = MaeVisionSirenScorer()
+upload_qwen_audio = QwenAudioAnalyzer()
 
 
 def process_live_frame(rgb_frame, session, analysis_fps, max_frames, advisor):
@@ -170,41 +184,72 @@ def _stream_state(img, frame_idx, res, doa):
 
 
 def render_uploaded_video_frame(frame, frame_idx, graph_res):
-    """Render custom video with unavailable non-inferred modalities marked honestly."""
+    """Render custom video using its live detector and audio inference state."""
     display_state = copy.deepcopy(graph_res)
     meta = display_state.setdefault("meta_exec", {})
-    meta.setdefault("score_status", {}).update(
-        rtdetr="not_connected",
-        mae="not_connected",
-        siren="not_connected",
-        siren_template="not_connected",
+    custom_inference = meta.get("custom_inference")
+    score_status = meta.setdefault("score_status", {})
+    score_status.setdefault(
+        "rtdetr", "available" if custom_inference else "not_connected"
+    )
+    score_status.setdefault("mae", "model_unavailable")
+    score_status.setdefault("siren", "not_connected")
+    score_status.setdefault(
+        "siren_template",
+        "audio_unavailable" if custom_inference else "not_connected",
     )
     details = display_state.setdefault("event_trigger", {}).setdefault("details", {})
-    for key in (
-        "vision_anomaly_score",
-        "vision_anomaly_ma",
-        "vision_anomaly_mae",
-        "vision_anomaly_mae_ma",
-        "p_siren",
-        "p_siren_ma5",
-        "p_siren_delta",
-        "siren_score_mae",
-        "siren_score_template",
-        "siren_detected_mae",
-        "siren_strength_mae",
-        "audio_confidence",
-        "doa_change_rate_dps_ma",
-        "lead_lost",
-        "lane_lost_count",
-    ):
-        details[key] = None
+    if custom_inference:
+        details.setdefault("vision_anomaly_score", None)
+        details.setdefault("vision_anomaly_ma", None)
+        details.setdefault("vision_anomaly_mae", None)
+        details.setdefault("vision_anomaly_mae_ma", None)
+        details.setdefault("p_siren", None)
+        details.setdefault("p_siren_ma5", None)
+        details.setdefault("p_siren_delta", None)
+        details.setdefault("siren_score_mae", None)
+        details.setdefault("siren_score_template", None)
+        details.setdefault("siren_detected_mae", None)
+        details.setdefault("siren_strength_mae", None)
+    else:
+        score_status.update(
+            rtdetr="not_connected",
+            siren_template="not_connected",
+        )
+        for key in (
+            "vision_anomaly_score",
+            "vision_anomaly_ma",
+            "vision_anomaly_mae",
+            "vision_anomaly_mae_ma",
+            "p_siren",
+            "p_siren_ma5",
+            "p_siren_delta",
+            "siren_score_mae",
+            "siren_score_template",
+            "siren_detected_mae",
+            "siren_strength_mae",
+            "audio_confidence",
+            "doa_change_rate_dps_ma",
+            "lead_lost",
+            "lane_lost_count",
+        ):
+            details[key] = None
     display_state["doa"] = {}
     audio = display_state.setdefault("audio", {})
-    audio["siren"] = {"detected": None, "confidence": None, "type": "not_connected"}
+    if not custom_inference:
+        audio["siren"] = {
+            "detected": None,
+            "confidence": None,
+            "type": "not_connected",
+        }
     audio["doa"] = {}
     percept = display_state.setdefault("percept", {})
-    percept["boxes"] = None
-    percept["has_lead"] = None
+    if not custom_inference:
+        percept["boxes"] = None
+        percept["has_lead"] = None
+    else:
+        percept.setdefault("boxes", None)
+        percept.setdefault("has_lead", None)
     return process_multi_view_frame(frame, frame_idx, display_state)
 
 
@@ -270,7 +315,8 @@ def stream_segment(
 
 def stream_upload(vp, max_frames: int = 0,
                   analysis_fps: float = DEFAULT_ANALYSIS_FPS,
-                  max_duration_seconds: float = 5 * 60):
+                  max_duration_seconds: float = 5 * 60,
+                  analyze_frame=None):
     """Manual probe over an uploaded video; NOT asserted (not in the manifest)."""
     if vp is None:
         raise gr.Error("Upload a video to probe, or pick a verified preset")
@@ -282,7 +328,268 @@ def stream_upload(vp, max_frames: int = 0,
         analysis_fps,
         error_type=gr.Error,
         max_duration_seconds=max_duration_seconds,
+        analyze_frame=analyze_frame,
     )
+
+
+def select_upload_preset(video_path):
+    return CUSTOM_UPLOAD if video_path else FULL_SEQUENCE
+
+
+def uploaded_frame_analyzer(audio):
+    """Create stateful real-time detector and AST inference for uploaded video."""
+    sample_rate, audio_samples = audio if audio is not None else (None, None)
+    history = {
+        "vision_risks": [],
+        "last_audio_window": None,
+        "last_audio_score": None,
+        "siren_streak": 0,
+        "qwen_audio": {
+            "status": (
+                "no_audio"
+                if audio_samples is None or sample_rate is None
+                else "disabled"
+            ),
+            "source": (
+                "unavailable"
+                if audio_samples is None or sample_rate is None
+                else "disabled"
+            ),
+            "text": (
+                "No audio track available"
+                if audio_samples is None or sample_rate is None
+                else "Set USE_QWEN_AUDIO=1 to enable"
+            ),
+            "window_index": None,
+        },
+    }
+
+    def analyze(frame, frame_idx, video_time):
+        try:
+            detections, risk = live_detector.analyze(
+                cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            )
+        except (FileNotFoundError, RuntimeError, ValueError) as exc:
+            raise gr.Error(f"Uploaded-video RT-DETR inference failed: {exc}") from exc
+
+        vision_risks = history["vision_risks"]
+        vision_risks.append(risk)
+        del vision_risks[:-5]
+        risk_ma = sum(vision_risks) / len(vision_risks)
+
+        details = {
+            "vision_anomaly_score": risk,
+            "vision_anomaly_ma": round(risk_ma, 4),
+            "vision_anomaly_mae": None,
+            "vision_anomaly_mae_ma": None,
+            "p_siren": None,
+            "p_siren_ma5": None,
+            "p_siren_delta": None,
+            "siren_score_mae": None,
+            "siren_score_template": None,
+            "siren_detected_mae": None,
+            "siren_strength_mae": None,
+            "doa_change_rate_dps_ma": None,
+            "lead_lost": None,
+            "lane_lost_count": None,
+        }
+        score_status = {
+            "rtdetr": "available",
+            "mae": "model_unavailable",
+            "siren": "not_connected",
+            "siren_template": "audio_unavailable",
+            "trigger": "not_fused_for_custom_upload",
+        }
+        audio_detection = {
+            "detected": None,
+            "confidence": None,
+            "type": "not_connected",
+        }
+        if audio_samples is not None and sample_rate is not None:
+            window_index = math.floor(video_time / SIREN_HOP_SECONDS)
+            start = round(window_index * SIREN_HOP_SECONDS * sample_rate)
+            end = round(
+                (window_index * SIREN_HOP_SECONDS + SIREN_WINDOW_SECONDS)
+                * sample_rate
+            )
+            window = audio_samples[start:min(end, len(audio_samples))]
+            if window_index != history["last_audio_window"]:
+                if (
+                    history["last_audio_window"] is None
+                    or window_index != history["last_audio_window"] + 1
+                ):
+                    history["siren_streak"] = 0
+                history["last_audio_score"] = None
+                if len(window):
+                    try:
+                        history["last_audio_score"] = upload_audio_scorer.score_waveform(
+                            window, sample_rate
+                        )
+                        score_status["siren_template"] = (
+                            "available"
+                            if history["last_audio_score"] is not None
+                            else "template_unavailable"
+                        )
+                    except Exception as exc:
+                        score_status["siren_template"] = "error"
+                        score_status["siren_template_error"] = (
+                            f"{type(exc).__name__}: {exc}"
+                        )
+                history["siren_streak"] = (
+                    history["siren_streak"] + 1
+                    if history["last_audio_score"] is not None
+                    and siren_detected(history["last_audio_score"], scope="frame")
+                    else 0
+                )
+                history["last_audio_window"] = window_index
+            if len(window):
+                history["qwen_audio"] = upload_qwen_audio.update(
+                    window_index, window, sample_rate
+                )
+
+            score = history["last_audio_score"]
+            if score is not None:
+                score_status["siren_template"] = "available"
+                details.update(
+                    siren_score_mae=score,
+                    siren_score_template=score,
+                    siren_detected_mae=history["siren_streak"] >= 5,
+                    siren_strength_mae=(
+                        "strong" if score >= 0.3 else
+                        "weak" if history["siren_streak"] >= 5 else
+                        "none"
+                    ),
+                    siren_consecutive_windows=history["siren_streak"],
+                    siren_candidate=siren_detected(score, scope="frame"),
+                )
+                audio_detection = {
+                    "detected": history["siren_streak"] >= 5,
+                    "confidence": None,
+                    "type": "ast_template",
+                }
+            elif score_status["siren_template"] == "audio_unavailable":
+                score_status["siren_template"] = "no_audio_stream"
+
+        details["lead_lost"] = None
+        return {
+            "frame_idx": frame_idx,
+            "percept": {
+                "boxes": detections,
+                "has_lead": any(
+                    item["label"].lower() in {"car", "truck", "bus"}
+                    for item in detections
+                ),
+            },
+            "event_trigger": {
+                "details": details,
+                "raw_trigger": False,
+                "is_triggered": False,
+                "trigger_reason": [],
+                "hysteresis": {"state": "not_fused"},
+            },
+            "audio": {
+                "siren": audio_detection,
+                "doa": {},
+            },
+            "vlm_payload": {
+                "llm_source": history["qwen_audio"]["source"],
+                "llm_action_text": history["qwen_audio"]["text"],
+                "status": history["qwen_audio"]["status"],
+                "audio_window_index": history["qwen_audio"]["window_index"],
+            },
+            "doa": {},
+            "meta_exec": {
+                "score_status": score_status,
+                "custom_inference": {
+                    "rtdetr": "live",
+                    "ast_siren_template": "live audio windows",
+                    "mae": "not available for arbitrary upload",
+                    "fused_trigger": "not calibrated for arbitrary upload",
+                },
+            },
+        }
+
+    return analyze
+
+
+def uploaded_video_audio(video_path: str, max_duration_seconds: float):
+    """Decode the uploaded video's original audio for the autoplay output."""
+    try:
+        probe = subprocess.run(
+            [
+                "ffprobe",
+                "-v",
+                "error",
+                "-select_streams",
+                "a:0",
+                "-show_entries",
+                "stream=index",
+                "-of",
+                "csv=p=0",
+                video_path,
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except FileNotFoundError as exc:
+        raise gr.Error(
+            "ffprobe and ffmpeg are required to play uploaded video audio"
+        ) from exc
+    if probe.returncode:
+        raise gr.Error(f"Could not inspect uploaded video audio: {probe.stderr.strip()}")
+    if not probe.stdout.strip():
+        return None
+
+    try:
+        decoded = subprocess.run(
+            [
+                "ffmpeg",
+                "-v",
+                "error",
+                "-i",
+                video_path,
+                "-map",
+                "0:a:0",
+                "-vn",
+                "-t",
+                str(max_duration_seconds),
+                "-f",
+                "wav",
+                "-acodec",
+                "pcm_s16le",
+                "-ar",
+                "16000",
+                "-ac",
+                "2",
+                "pipe:1",
+            ],
+            capture_output=True,
+            check=False,
+        )
+    except FileNotFoundError as exc:
+        raise gr.Error(
+            "ffprobe and ffmpeg are required to play uploaded video audio"
+        ) from exc
+    if decoded.returncode:
+        error = decoded.stderr.decode(errors="replace").strip()
+        raise gr.Error(f"Could not decode uploaded video audio: {error}")
+
+    try:
+        with wave.open(io.BytesIO(decoded.stdout), "rb") as wav:
+            channels = wav.getnchannels()
+            sample_rate = wav.getframerate()
+            frames = wav.readframes(wav.getnframes())
+    except (wave.Error, EOFError) as exc:
+        raise gr.Error(f"Could not read decoded upload audio: {exc}") from exc
+
+    import numpy as np
+
+    audio = np.frombuffer(frames, dtype="<i2").reshape(-1, channels)
+    audio = audio.astype(np.float32) / 32768.0
+    if channels == 1:
+        audio = audio[:, 0]
+    return sample_rate, audio
 
 
 def demo_audio(choice, audio_source: str, max_frames: int):
@@ -337,17 +644,25 @@ def run(
     upload_duration_minutes,
     audio_source="with_siren",
 ):
-    if choice == FULL_SEQUENCE:
-        segments = SEGMENTS
-    elif choice == CUSTOM_UPLOAD:
+    if choice == CUSTOM_UPLOAD:
+        if vp is None:
+            raise gr.Error("Upload a video to probe, or pick a verified preset")
+        max_duration_seconds = float(upload_duration_minutes) * 60
+        soundtrack = uploaded_video_audio(vp, max_duration_seconds)
+        analyze_frame = uploaded_frame_analyzer(soundtrack)
+        first_frame = True
         for frame in stream_upload(
             vp,
             max_frames=0,
             analysis_fps=analysis_fps,
-            max_duration_seconds=float(upload_duration_minutes) * 60,
+            max_duration_seconds=max_duration_seconds,
+            analyze_frame=analyze_frame,
         ):
-            yield frame, None
+            yield frame, soundtrack if first_frame else gr.skip()
+            first_frame = False
         return
+    elif choice == FULL_SEQUENCE:
+        segments = SEGMENTS
     elif choice in SEG_MAP:
         segments = [SEG_MAP[choice]]
     else:
@@ -368,7 +683,11 @@ def build():
             with gr.Row():
                 preset = gr.Dropdown(PRESET_CHOICES, value=FULL_SEQUENCE,
                                      label="Preset (each segment is asserted)")
-                vp = gr.Video(label="Custom probe (no assertion)", sources=["upload"])
+                vp = gr.Video(
+                    label="Custom probe video (auto-selects upload playback)",
+                    sources=["upload"],
+                    include_audio=True,
+                )
                 mf = gr.Slider(
                     0, 1500, value=0, step=30,
                     label="Max frames per segment (0 = full verified window)",
@@ -386,9 +705,15 @@ def build():
             )
             oi = gr.Image(label="Stream", type="numpy", streaming=True)
             demo_sound = gr.Audio(
-                label="Original audio (autoplay)",
+                label="Uploaded or original demo audio",
                 autoplay=True,
                 type="numpy",
+            )
+            vp.change(
+                select_upload_preset,
+                inputs=vp,
+                outputs=preset,
+                show_progress="hidden",
             )
             gr.Button("Run").click(
                 run,

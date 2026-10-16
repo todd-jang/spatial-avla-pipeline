@@ -117,7 +117,10 @@ python run_gradio.py
 브라우저에서 `http://localhost:7860` 접속.  
 (또는 터미널에 출력된 share URL 사용)
 
-UI에서 mp4 동영상 업로드 → **Run** 버튼 → 2×2 실시간 스트리밍 확인.
+UI에서 mp4 동영상을 업로드하면 프리셋이 자동으로 사용자 영상 분석으로 전환됩니다.
+**Run** 버튼을 눌러 2×2 실시간 스트리밍을 확인하세요. 업로드 영상의 원본 오디오는
+별도 플레이어에서 분석 스트림과 함께 재생됩니다. 브라우저가 자동 재생을 차단하면
+플레이어의 재생 버튼을 누르세요.
 
 ### 실시간 센서 모니터 (읽기 전용)
 
@@ -183,6 +186,26 @@ TPR/FPR 1.00/0.00, conservative는 0.917/0.00, sensitive는 1.00/0.40을 보였�
 독립 검증이 아닙니다. 이 수치는 잠정 operating point이며 독립 테스트 성능으로 해석하면
 안 됩니다. S_V의 clip 단위 점수는 해당 clip 전체 오디오를 참조하므로 실시간/미래 프레임
 없는 추론이 아닙니다. 미연결 라이브 마이크에는 AST 점수가 계산되지 않습니다.
+
+### Colab GPU 추론 (Qwen Audio + AST)
+
+두 프로젝트의 학습/연구 코드와 앱 추론은 별도 Docker 서비스가 아니라 Python 모듈로
+통합합니다. `paper-diary`는 MAE/AST 템플릿 생성 및 연구 이력을 보존하고, 이 저장소의
+Gradio 앱이 AST 템플릿과 Qwen Audio를 호출합니다. Google Colab에서는 GPU 런타임의
+PyTorch를 직접 사용하며 Docker 데몬을 띄우지 않습니다.
+
+`notebooks/06_colab_gpu_inference.ipynb`를 Colab에서 열고 T4 이상 GPU 런타임을 선택하세요.
+Google Drive에 다음 파일을 `MyDrive/paper-diary/models/` 경로로 준비합니다.
+
+- `mae_siren_templates_ast.pt`: AST 전처리/모델 ID가 검증된 실험 템플릿
+- `rtdetr-l.pt`: 업로드 영상의 객체 탐지 체크포인트
+
+노트북은 이 파일들을 앱의 `outputs/` 및 저장소 루트로 복사한 뒤 두 저장소의 코드와 함께
+Gradio 데모를 실행합니다. Qwen Audio 가중치는 첫 실행 시 Hugging Face에서 내려받습니다.
+사용자 영상 업로드의 AST 점수는 기존처럼 2초 오디오 윈도우를 1초 간격으로 계산하고,
+Qwen Audio는 별도 백그라운드 워커에서 실제 윈도우 파형을 분석합니다. Qwen 추론은 기본
+비활성화이며, 노트북에서 `USE_QWEN_AUDIO=1`을 설정하면 켜집니다. 오류는 타일의 Qwen
+상태에 표시되고, Qwen 결과는 AST 템플릿 점수나 미보정 융합 트리거를 대신하지 않습니다.
 
 S_B는 사이렌 검출과 mini-MAE의 인과적 robust-z 이상 점수(`mae_anomaly_z_ma >= 5.0`)가
 동시에 참일 때만 `siren_vision_trigger`를 올리고 `trigger_reason`에
